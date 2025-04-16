@@ -45,7 +45,7 @@ runs:
       with:
         python-version: ${{ inputs.python_version }}
 
-    - name: 'Get Python version'
+    - name: 'Get installed Python version'
       id: get-python-version
       shell: bash
       run: |
@@ -73,6 +73,12 @@ runs:
           pip install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+
+    - name: Detect Conan profile
+      shell: bash
+      id: detect-conan-profile
+      run: |
+        conan profile detect || true
 
     - name: Get Conan cache folder path
       shell: bash
