@@ -38,7 +38,7 @@ jobs:
         shell: bash
         run: |
           conan --version | grep -q '2.15.1'
-          audit provider list | grep -q token
+          grep token "$(conan config home)/audit_providers.json"
           conan config home | grep -q "conan_home"
           python --version | grep -q '3.12'
 
