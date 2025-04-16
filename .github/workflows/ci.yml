@@ -1,0 +1,49 @@
+name: Validate Conan Action
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  testing-action:
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Execute checkout
+        uses: actions/checkout@v4
+
+      - name: Consume Conan Action
+        uses: ./
+        with:
+          version: '2.15.1'
+          config_urls: |
+              https://github.com/conan-io/conan-extensions.git
+              https://github.com/conan-io/conan-extensions.git
+              https://github.com/conan-io/conan-extensions.git
+          audit_token: ${{ secrets.CONAN_AUDIT_PROVIDER_TOKEN_CONANCENTER }}
+          home: ${{ github.workspace }}/conan_home
+          cache_packages: 'true'
+          python_version: '3.12'
+
+      - name: Verify action results
+        shell: bash
+        run: |
+          conan --version | grep -q '2.15.1'
+          conan audit provider list | grep -q conancenter
+          conan config home | grep -q "conan_home"
+          python --version | grep -q '3.12'
+
+      - name: Validate caching Conan packages
+        shell: bash
+        run: |
+          conan profile detect --force
+          conan install -r conancenter --requires=asio/1.32.0 --build=missing
