@@ -48,7 +48,7 @@ It's possible to customize the action using the following options:
 
 | Option           | Type    | Description                                                                                      |
 |------------------|---------|--------------------------------------------------------------------------------------------------|
-| `version`        | string  | Conan client version to be installed. By default, it's the latest version available.             |
+| `version`        | string  | Conan client version 2.x to be installed. By default, it's the latest version available.         |
 | `home`           | string  | A custom path to be used as Conan cache directory.                                               |
 | `audit_token`    | string  | The Conan audit token to authenticate to the Audit server with Conan.                            |
 | `config_urls`    | list    | URLs of the Git repositories containing the custom Conan configurations to be installed.         |

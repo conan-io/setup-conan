@@ -4,7 +4,7 @@ author: 'Conan.io <info@conan.io>'
 
 inputs:
   version:
-    description: 'Version of Conan to install'
+    description: 'Version of Conan 2.x to install'
     required: false
     default: ''
   config_urls:
@@ -62,7 +62,12 @@ runs:
       shell: bash
       id: install-conan
       run: |
-        if [ -n "${{ inputs.conan_version }}" ]; then
+        if [ -n "${{ inputs.version }}" ]; then
+          conan_version="${{ inputs.version }}"
+          if [[ "$conan_version" == 1.* ]]; then
+            echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
+            exit 1
+          fi
           pip install conan==${{ inputs.version }}
         else
           pip install conan
