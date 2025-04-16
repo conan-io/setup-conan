@@ -29,7 +29,7 @@ jobs:
               https://github.com/conan-io/conan-extensions.git
               https://github.com/conan-io/conan-extensions.git
               https://github.com/conan-io/conan-extensions.git
-          audit_token: ${{ secrets.CONAN_AUDIT_PROVIDER_TOKEN_CONANCENTER }}
+          audit_token: "fakec7b2534bef256ad113757f68be21e0fd067d47eed0ee75071a02fa2fc83f7ca5token"
           home: ${{ github.workspace }}/conan_home
           cache_packages: 'true'
           python_version: '3.12'
