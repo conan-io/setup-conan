@@ -1,4 +1,4 @@
-# Install Conan Action
+# Setup Conan Action Github Action
 
 [![Validate Conan Action](https://github.com/conan-io/setup-conan/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/conan-io/setup-conan/actions/workflows/ci.yml)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Conan%20Client-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=github)](https://github.com/marketplace/actions/setup-conan-client)
