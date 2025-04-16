@@ -1,6 +1,6 @@
 name: 'Setup Conan Client'
 description: 'A GitHub Action to install and configure the Conan client'
-author: 'Conan.io <info@conan.io>'
+author: 'Conan.io <conan@jfrog.com>'
 
 inputs:
   version:
@@ -8,7 +8,7 @@ inputs:
     required: false
     default: ''
   config_urls:
-    description: 'URLs or paths to a Conan configuration repository to be installed. Use , (comma) to separate multiple URLs'
+    description: 'URLs or paths to a Conan configuration repository to be installed. Use new lines to separate multiple URLs.'
     required: false
     default: ''
   audit_token:
