@@ -11,7 +11,7 @@ This action provides a simple and flexible way to set up Conan with custom confi
 
 - 🚀 Install any version of Conan 2.x
 - ⚙️ Apply custom Conan configurations
-- 🔐 Configure audit tokens
+- 🔐 Configure audit tokens for dependencies vulnerabilities scanning
 - 🗂️ Cache Conan packages using GitHub cache
 - 🔍 Support for custom Conan home
 - 🐍 Customize Python version setup
