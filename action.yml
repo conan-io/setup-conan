@@ -1,4 +1,4 @@
-name: 'Conan.io GitHub Action'
+name: 'Setup Conan Client'
 description: 'A GitHub Action to install and configure the Conan client'
 author: 'Conan.io <info@conan.io>'
 

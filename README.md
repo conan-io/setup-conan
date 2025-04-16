@@ -1,7 +1,7 @@
 # Install Conan Action
 
-[![Validate Conan Action](https://github.com/uilianries/conan-github-action/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/uilianries/conan-github-action/actions/workflows/ci.yml)
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Conan%20Package%20Manager-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=github)](https://github.com/marketplace/actions/conan-io-github-action)
+[![Validate Conan Action](https://github.com/uilianries/conan-github-action/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/conan-io/setup-conan/actions/workflows/ci.yml)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Conan%20Client-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=github)](https://github.com/marketplace/actions/setup-conan-client)
 
 
 A GitHub Action to install and configure the Conan package manager in your workflow.
@@ -9,15 +9,13 @@ This action provides a simple and flexible way to set up Conan with custom confi
 
 ## Features
 
-- 🚀 Install any version of Conan
+- 🚀 Install any version of Conan 2.x
 - ⚙️ Apply custom Conan configurations
 - 🔐 Configure audit tokens
 - 🗂️ Cache Conan packages using GitHub cache
-- 🔍 Support for custom Conan cache directory
-- 🔗 Support for multiple configuration URL
+- 🔍 Support for custom Conan home
 - 🐍 Customize Python version setup
 - 💪 Cross-platform support
-- 🔄 Composite action for better reliability
 
 ## Usage
 
