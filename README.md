@@ -1,6 +1,6 @@
 # Install Conan Action
 
-[![Validate Conan Action](https://github.com/uilianries/conan-github-action/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/conan-io/setup-conan/actions/workflows/ci.yml)
+[![Validate Conan Action](https://github.com/conan-io/setup-conan/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/conan-io/setup-conan/actions/workflows/ci.yml)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Conan%20Client-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=github)](https://github.com/marketplace/actions/setup-conan-client)
 
 
@@ -29,7 +29,7 @@ steps:
     uses: actions/checkout@v4
 
   - name: Install Conan
-    uses: uilianries/conan-github-action@v1
+    uses: conan-io/setup-conan@v1
     with:
       audit_token: ${{ secrets.CONAN_AUDIT_TOKEN }}
       config_urls: |
