@@ -44,12 +44,13 @@ runs:
       id: setup-python
       with:
         python-version: ${{ inputs.python_version }}
+        update-environment: false
 
     - name: 'Get installed Python version'
       id: get-python-version
       shell: bash
       run: |
-        echo "python-version=$(python --version | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+        echo "python-version=$('${{ steps.setup-python.outputs.python-path }}' --version | cut -d' ' -f2)" >> $GITHUB_OUTPUT
 
     - name: Set CONAN_HOME
       if: ${{ inputs.home != '' }}
@@ -62,15 +63,16 @@ runs:
       shell: bash
       id: install-conan
       run: |
+        '${{ steps.setup-python.outputs.python-path }}' -m pip install --upgrade pip pipx
         if [ -n "${{ inputs.version }}" ]; then
           conan_version="${{ inputs.version }}"
           if [[ "$conan_version" == 1.* ]]; then
             echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
             exit 1
           fi
-          pip install conan==${{ inputs.version }}
+          '${{ steps.setup-python.outputs.python-path }}' -m pipx install conan==${{ inputs.version }}
         else
-          pip install conan
+          '${{ steps.setup-python.outputs.python-path }}' -m pipx install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 

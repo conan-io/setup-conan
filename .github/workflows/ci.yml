@@ -43,7 +43,6 @@ jobs:
           conan profile show -pr:a default | grep -q 'settings'
           grep -q token "$(conan config home)/audit_providers.json"
           conan config home | grep -q "conan_home"
-          python --version | grep -q '3.12'
 
       - name: Validate caching Conan packages
         shell: bash
