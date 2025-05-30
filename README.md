@@ -60,13 +60,14 @@ This Github Action offers options inputs to execute extra steps just after insta
 This is useful for installing custom configurations or applying any other setup you need.
 It's possible to customize the action using the following options:
 
-| Option           | Type    | Description                                                                                      |
-|------------------|---------|--------------------------------------------------------------------------------------------------|
-| `version`        | string  | Conan client version 2.x to be installed. By default, it's the latest version available.         |
-| `home`           | string  | A custom path to be used as Conan cache directory.                                               |
-| `audit_token`    | string  | The Conan audit token to authenticate to the Audit server with Conan.                            |
-| `config_urls`    | list    | URLs of the Git repositories containing the custom Conan configurations to be installed.         |
-| `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. false by default |
+| Option           | Type    | Description                                                                                                 |
+|------------------|---------|-------------------------------------------------------------------------------------------------------------|
+| `version`        | string  | Conan client version 2.x to be installed. By default, it's the latest version available.                    |
+| `home`           | string  | A custom path to be used as Conan cache directory.                                                          |
+| `audit_token`    | string  | The Conan audit token to authenticate to the Audit server with Conan.                                       |
+| `config_urls`    | list    | URLs of the Git repositories containing the custom Conan configurations to be installed.                    |
+| `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. false by default            |
+| `python_version` | string  | **DEPRECATED** Use the Python version set in the GitHub runner instead or a github action to set up Python. |
 
 
 ### Using setup-python Action alongside setup-conan
