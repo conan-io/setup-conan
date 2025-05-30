@@ -23,6 +23,11 @@ inputs:
     description: 'Cache all Conan packages from the cache'
     required: false
     default: 'false'
+  python_version:
+    description: 'Python version to use for Conan installation'
+    required: false
+    default: '3.10'
+    deprecationMessage: 'This input is deprecated and will be removed in future versions. Use the Python version set in the GitHub runner instead or a github action to set up Python.'
 
 outputs:
   conan-version:
@@ -59,8 +64,8 @@ runs:
       id: install-conan
       run: |
         python --version
-        python -m pip --version
         python -m pip install --upgrade pip
+        python -m pip --version
         if [ -n "${{ inputs.version }}" ]; then
           conan_version="${{ inputs.version }}"
           python -m pip install conan==${{ inputs.version }}

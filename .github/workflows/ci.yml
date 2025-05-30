@@ -34,6 +34,7 @@ jobs:
           audit_token: 'fake_token'
           home: ${{ github.workspace }}/conan_home
           cache_packages: 'true'
+          python_version: '3.10'
 
       - name: Verify action results
         shell: bash
