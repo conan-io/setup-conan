@@ -35,6 +35,18 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Check Conan version
+      shell: bash
+      id: check-conan-version
+      run: |
+        if [ -n "${{ inputs.version }}" ]; then
+          conan_version="${{ inputs.version }}"
+          if [[ "$conan_version" == 1.* ]]; then
+            echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
+            exit 1
+          fi
+        fi
+
     - name: Set CONAN_HOME
       if: ${{ inputs.home != '' }}
       id: export-conan-home
@@ -46,15 +58,12 @@ runs:
       shell: bash
       id: install-conan
       run: |
+        python -m pip install --upgrade pip
         if [ -n "${{ inputs.version }}" ]; then
           conan_version="${{ inputs.version }}"
-          if [[ "$conan_version" == 1.* ]]; then
-            echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
-            exit 1
-          fi
-          pip install conan==${{ inputs.version }}
+          python -m pip install conan==${{ inputs.version }}
         else
-          pip install conan
+          python -m pip install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
