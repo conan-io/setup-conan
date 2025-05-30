@@ -69,17 +69,6 @@ It's possible to customize the action using the following options:
 | `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. false by default |
 
 
-## Dealing with PKG_CONFIG_PATH on Windows builds
-
-When using Conan on Windows, you might need to set the `PKG_CONFIG_PATH` environment variable to ensure that the correct pkg-config files are found in case neededing to consume system .pc files. This can be done by adding the following step in your workflow:
-
-```yaml
-  - name: Set PKG_CONFIG_PATH
-    run: echo "PKG_CONFIG_PATH=${{ github.workspace }}/pkgconfig" >> $GITHUB_ENV
-```
-
-This step sets the `PKG_CONFIG_PATH` environment variable to point to the `pkgconfig` directory in your GitHub workspace, allowing `pkgconf` to find the necessary pkg-config files during the build process. Please, ensure the path syntax format is correct for your operating system, use `:` as path separator and dot not use backslashes (`\`) as they will break `pkgconf` on Windows when parsing the path.
-
 ### Using setup-python Action alongside setup-conan
 
 If you are using the [setup-python](https://github.com/actions/setup-python) action in your workflow, you can use it alongside the setup-conan action.
