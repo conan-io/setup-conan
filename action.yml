@@ -23,10 +23,6 @@ inputs:
     description: 'Cache all Conan packages from the cache'
     required: false
     default: 'false'
-  python_version:
-    description: 'Python version to install'
-    required: false
-    default: '3.10'
 
 outputs:
   conan-version:
@@ -39,18 +35,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: 'Install Python'
-      uses: actions/setup-python@v5
-      id: setup-python
-      with:
-        python-version: ${{ inputs.python_version }}
-
-    - name: 'Get installed Python version'
-      id: get-python-version
-      shell: bash
-      run: |
-        echo "python-version=$(python --version | cut -d' ' -f2)" >> $GITHUB_OUTPUT
-
     - name: Set CONAN_HOME
       if: ${{ inputs.home != '' }}
       id: export-conan-home
