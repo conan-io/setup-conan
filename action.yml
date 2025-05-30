@@ -58,6 +58,8 @@ runs:
       shell: bash
       id: install-conan
       run: |
+        python --version
+        python -m pip --version
         python -m pip install --upgrade pip
         if [ -n "${{ inputs.version }}" ]; then
           conan_version="${{ inputs.version }}"
