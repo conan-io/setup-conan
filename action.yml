@@ -76,9 +76,14 @@ runs:
 
     - name: Detect Conan profile
       shell: bash
-      id: detect-conan-profile
+      id: conan-profile
       run: |
         conan profile detect || true
+        echo "conan-arch=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.arch)" >> $GITHUB_OUTPUT
+        echo "conan-os=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.os)" >> $GITHUB_OUTPUT
+        echo "conan-compiler=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.compiler )" >> $GITHUB_OUTPUT
+        echo "conan-compiler-ver=$(conan profile show -pr:h default -cx host --format=json | jq '.host.settings.\"compiler.version\"')" >> $GITHUB_OUTPUT
+        echo "conan-build-type=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.build_type)" >> $GITHUB_OUTPUT
 
     - name: Get Conan cache folder path
       shell: bash
@@ -109,9 +114,9 @@ runs:
       id: cache-conan-packages
       with:
         path: ${{ steps.get-conan-home.outputs.conan-home }}/p
-        key: conan-${{ steps.install-conan.outputs.conan-version }}-${{ runner.os }}
+        key: conan-${{ steps.conan-profile.outputs.conan-os }}-${{ steps.conan-profile.outputs.conan-arch }}-${{ steps.conan-profile.outputs.conan-compiler }}-${{ steps.conan-profile.outputs.conan-compiler-ver }}-${{ steps.conan-profile.outputs.conan-build-type }}
         restore-keys: |
-          conan-${{ steps.install-conan.outputs.conan-version }}-${{ runner.os }}-
+          conan-${{ steps.conan-profile.outputs.conan-os }}-${{ steps.conan-profile.outputs.conan-arch }}-${{ steps.conan-profile.outputs.conan-compiler }}-${{ steps.conan-profile.outputs.conan-compiler-ver }}-${{ steps.conan-profile.outputs.conan-build-type }}-
 
 branding:
   icon: 'package'
