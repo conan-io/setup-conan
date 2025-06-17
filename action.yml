@@ -27,6 +27,7 @@ inputs:
     description: 'Python version to install'
     required: false
     default: '3.10'
+    deprecationMessage: 'This input is deprecated and will be removed in future versions. Use the Python version set in the GitHub runner instead or a GitHub Action to set up Python.'
 
 outputs:
   conan-version:
@@ -39,17 +40,17 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: 'Install Python'
-      uses: actions/setup-python@v5
-      id: setup-python
-      with:
-        python-version: ${{ inputs.python_version }}
-
-    - name: 'Get installed Python version'
-      id: get-python-version
+    - name: Check Conan version
       shell: bash
+      id: check-conan-version
       run: |
-        echo "python-version=$(python --version | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+        if [ -n "${{ inputs.version }}" ]; then
+          conan_version="${{ inputs.version }}"
+          if [[ "$conan_version" == 1.* ]]; then
+            echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
+            exit 1
+          fi
+        fi
 
     - name: Set CONAN_HOME
       if: ${{ inputs.home != '' }}
@@ -62,15 +63,14 @@ runs:
       shell: bash
       id: install-conan
       run: |
+        python --version
+        python -m pip install --upgrade pip
+        python -m pip --version
         if [ -n "${{ inputs.version }}" ]; then
           conan_version="${{ inputs.version }}"
-          if [[ "$conan_version" == 1.* ]]; then
-            echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
-            exit 1
-          fi
-          pip install conan==${{ inputs.version }}
+          python -m pip install conan==${{ inputs.version }}
         else
-          pip install conan
+          python -m pip install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 

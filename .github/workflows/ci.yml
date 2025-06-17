@@ -34,7 +34,7 @@ jobs:
           audit_token: 'fake_token'
           home: ${{ github.workspace }}/conan_home
           cache_packages: 'true'
-          python_version: '3.12'
+          python_version: '3.10'
 
       - name: Verify action results
         shell: bash
@@ -43,7 +43,6 @@ jobs:
           conan profile show -pr:a default | grep -q 'settings'
           grep -q token "$(conan config home)/audit_providers.json"
           conan config home | grep -q "conan_home"
-          python --version | grep -q '3.12'
 
       - name: Validate caching Conan packages
         shell: bash
