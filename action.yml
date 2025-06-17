@@ -79,11 +79,11 @@ runs:
       id: conan-profile
       run: |
         conan profile detect || true
-        echo "conan-arch=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.arch)" >> $GITHUB_OUTPUT
-        echo "conan-os=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.os)" >> $GITHUB_OUTPUT
-        echo "conan-compiler=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.compiler )" >> $GITHUB_OUTPUT
-        echo "conan-compiler-ver=$(conan profile show -pr:h default -cx host --format=json | jq '.host.settings.\"compiler.version\"')" >> $GITHUB_OUTPUT
-        echo "conan-build-type=$(conan profile show -pr:h default -cx host --format=json | jq .host.settings.build_type)" >> $GITHUB_OUTPUT
+        echo "conan-arch=$(conan profile show -pr:h default -cx host --format=json | jq -r .host.settings.arch)" >> $GITHUB_OUTPUT
+        echo "conan-os=$(conan profile show -pr:h default -cx host --format=json | jq -r .host.settings.os)" >> $GITHUB_OUTPUT
+        echo "conan-compiler=$(conan profile show -pr:h default -cx host --format=json | jq -r .host.settings.compiler )" >> $GITHUB_OUTPUT
+        echo "conan-compiler-ver=$(conan profile show -pr:h default -cx host --format=json | jq -r '.host.settings."compiler.version"')" >> $GITHUB_OUTPUT
+        echo "conan-build-type=$(conan profile show -pr:h default -cx host --format=json | jq -r .host.settings.build_type)" >> $GITHUB_OUTPUT
 
     - name: Get Conan cache folder path
       shell: bash
