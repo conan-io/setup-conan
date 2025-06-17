@@ -24,7 +24,7 @@ inputs:
     required: false
     default: 'false'
   python_version:
-    description: 'Python version to use for Conan installation'
+    description: 'Python version to install'
     required: false
     default: '3.10'
     deprecationMessage: 'This input is deprecated and will be removed in future versions. Use the Python version set in the GitHub runner instead or a GitHub Action to set up Python.'
