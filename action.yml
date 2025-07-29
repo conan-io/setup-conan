@@ -91,7 +91,7 @@ runs:
         else
           $PIP_CMD install conan
         fi
-        echo "conan-version=$($CONAN_CMD --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+        echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
     - name: Detect Conan profile
       shell: bash
