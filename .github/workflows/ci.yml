@@ -48,3 +48,20 @@ jobs:
         shell: bash
         run: |
           conan install -r conancenter --requires=asio/1.32.0 --build=missing
+
+  docker-test:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12-slim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Consume Conan Action
+        uses: ./
+        with:
+          version: "2.15.1"
+          use_venv: true
+          cache_packages: 'false'
+      - name: test conan is available
+        run: |
+          conan --version
+          command -v conan | grep conan-venv
