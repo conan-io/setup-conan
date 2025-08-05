@@ -77,18 +77,18 @@ runs:
         echo "$BIN_DIR" >> "$GITHUB_PATH"
         echo "VENV_PIP=$BIN_DIR/pip" >> "$GITHUB_ENV"
         echo "VENV_CONAN=$BIN_DIR/conan" >> "$GITHUB_ENV"
+        echo "VENV_PYTHON=$BIN_DIR/python" >> "$GITHUB_ENV"
 
     - name: 'Install Conan'
       shell: bash
       id: install-conan
       run: |
-        python --version
-        PIP_CMD=${VENV_PIP:-pip}
-        $PIP_CMD install --upgrade pip
+        PYTHON_CMD=${VENV_PYTHON:-python}
+        $PYTHON_CMD -m pip install --upgrade pip
         if [ -n "${{ inputs.version }}" ]; then
-          $PIP_CMD install conan==${{ inputs.version }}
+          $PYTHON_CMD -m pip install conan==${{ inputs.version }}
         else
-          $PIP_CMD install conan
+          $PYTHON_CMD -m pip install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
