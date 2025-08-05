@@ -84,7 +84,6 @@ runs:
       run: |
         python --version
         PIP_CMD=${VENV_PIP:-pip}
-        CONAN_CMD=${VENV_CONAN:-conan}
         $PIP_CMD install --upgrade pip
         if [ -n "${{ inputs.version }}" ]; then
           $PIP_CMD install conan==${{ inputs.version }}
