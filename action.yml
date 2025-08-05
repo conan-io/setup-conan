@@ -28,6 +28,10 @@ inputs:
     required: false
     default: '3.10'
     deprecationMessage: 'This input is deprecated and will be removed in future versions. Use the Python version set in the GitHub runner instead or a GitHub Action to set up Python.'
+  use_venv:
+    description: 'Install Conan inside an isolated virtual environment'
+    required: false
+    default: 'false'
 
 outputs:
   conan-version:
@@ -59,18 +63,32 @@ runs:
       run: |
         echo "CONAN_HOME=${{ inputs.home }}" >> $GITHUB_ENV
 
+    - name: Create virtual environment
+      if: ${{ inputs.use_venv == 'true' }}
+      shell: bash
+      run: |
+        VENV_DIR="${RUNNER_TEMP}/conan-venv"
+        python -m venv "$VENV_DIR"
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          BIN_DIR="$VENV_DIR/Scripts"
+        else
+          BIN_DIR="$VENV_DIR/bin"
+        fi
+        echo "$BIN_DIR" >> "$GITHUB_PATH"
+        echo "VENV_PIP=$BIN_DIR/pip" >> "$GITHUB_ENV"
+        echo "VENV_CONAN=$BIN_DIR/conan" >> "$GITHUB_ENV"
+        echo "VENV_PYTHON=$BIN_DIR/python" >> "$GITHUB_ENV"
+
     - name: 'Install Conan'
       shell: bash
       id: install-conan
       run: |
-        python --version
-        python -m pip install --upgrade pip
-        python -m pip --version
+        PYTHON_CMD=${VENV_PYTHON:-python}
+        $PYTHON_CMD -m pip install --upgrade pip
         if [ -n "${{ inputs.version }}" ]; then
-          conan_version="${{ inputs.version }}"
-          python -m pip install conan==${{ inputs.version }}
+          $PYTHON_CMD -m pip install conan==${{ inputs.version }}
         else
-          python -m pip install conan
+          $PYTHON_CMD -m pip install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
