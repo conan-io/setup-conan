@@ -1,4 +1,6 @@
 name: Validate Conan Action
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:
