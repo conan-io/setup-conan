@@ -78,4 +78,4 @@ jobs:
           profile_detect: 'false'
       - name: Check for non existing default profile in Conan cache
         shell: bash
-        run: if [ -f "$(conan config home)/profiles/default" ]; then echo "[ERROR] Default profile should not exist"; exit 1; fi
+        run: if [ -e "$(conan config home)/profiles/default" ]; then echo "Default profile should not exist"; exit 1; fi
