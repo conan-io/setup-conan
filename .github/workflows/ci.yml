@@ -67,3 +67,15 @@ jobs:
         run: |
           conan --version
           command -v conan | grep conan-venv
+
+  profile-detect-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Consume Conan Action without profile detection
+        uses: ./
+        with:
+          profile_detect: 'false'
+      - name: Check for non existing default profile in Conan cache
+        shell: bash
+        run: if [ -e "$(conan config home)/profiles/default" ]; then echo "Default profile should not exist"; exit 1; fi

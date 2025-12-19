@@ -68,6 +68,7 @@ It's possible to customize the action using the following options:
 | `config_urls`    | list    | URLs of the Git repositories containing the custom Conan configurations to be installed.                    |
 | `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. false by default            |
 | `use_venv`       | boolean | Use a virtual environment for the Python version set in the GitHub runner.                                  |
+| `profile_detect` | boolean | Automatically detect and use a Conan profile based on the GitHub runner environment. true by default                        |
 | `python_version` | string  | **DEPRECATED** Use the Python version set in the GitHub runner instead or a GitHub Action to set up Python. |
 
 

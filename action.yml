@@ -32,6 +32,10 @@ inputs:
     description: 'Install Conan inside an isolated virtual environment'
     required: false
     default: 'false'
+  profile_detect:
+    description: 'Automatically detect and use a Conan profile based on the GitHub runner environment'
+    required: false
+    default: 'true'
 
 outputs:
   conan-version:
@@ -93,6 +97,7 @@ runs:
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
     - name: Detect Conan profile
+      if: ${{ inputs.profile_detect == 'true' }}
       shell: bash
       id: detect-conan-profile
       run: |
