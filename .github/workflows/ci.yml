@@ -76,12 +76,6 @@ jobs:
         uses: ./
         with:
           profile_detect: 'false'
-      - name: Run Conan version
+      - name: Check for non existing default profile in Conan cache
         shell: bash
-        run: conan --version
-      - name: Show Conan home location
-        shell: bash
-        run: conan config home
-      - name: Show installed profiles - Expecting to be empty
-        shell: bash
-        run: conan profile list 2>&1 | grep -v default
+        run: if [ -f "$(conan config home)/profiles/default" ]; then echo "[ERROR] Default profile should not exist"; exit 1; fi
