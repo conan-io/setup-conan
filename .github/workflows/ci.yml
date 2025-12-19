@@ -67,3 +67,22 @@ jobs:
         run: |
           conan --version
           command -v conan | grep conan-venv
+
+  profile-detect-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Consume Conan Action without profile detection
+        uses: ./
+        with:
+          version: "2.15.1"
+          profile_detect: 'false'
+      - name: Run Conan version
+        shell: bash
+        run: conan --version
+      - name: Show Conan home location
+        shell: bash
+        run: conan config home
+      - name: Show installed profiles - Expecting to be empty
+        shell: bash
+        run: conan profile list | grep -v '^default$'
