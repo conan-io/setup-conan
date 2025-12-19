@@ -75,7 +75,6 @@ jobs:
       - name: Consume Conan Action without profile detection
         uses: ./
         with:
-          version: "2.15.1"
           profile_detect: 'false'
       - name: Run Conan version
         shell: bash
