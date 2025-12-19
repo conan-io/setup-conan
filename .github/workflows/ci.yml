@@ -85,4 +85,4 @@ jobs:
         run: conan config home
       - name: Show installed profiles - Expecting to be empty
         shell: bash
-        run: conan profile list | grep -v '^default$'
+        run: conan profile list 2>&1 | grep -v default
