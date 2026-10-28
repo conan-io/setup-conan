@@ -23,6 +23,10 @@ inputs:
     description: 'Cache all Conan packages from the cache'
     required: false
     default: 'false'
+  cache_key:
+    description: 'Custom segment for the Conan packages cache key. Requires cache_packages. It is added as an extra segment to the key computed from the runner OS, architecture and image, so each value gets its own cache'
+    required: false
+    default: ''
   python_version:
     description: 'Python version to install'
     required: false
@@ -130,8 +134,10 @@ runs:
       if: ${{ inputs.cache_packages == 'true' }}
       id: conan-cache-key
       shell: bash
+      env:
+        CACHE_KEY: ${{ inputs.cache_key }}
       run: |
-        prefix="conan-${{ runner.os }}-${{ runner.arch }}-${ImageOS:-selfhosted}-"
+        prefix="conan-${CACHE_KEY:+${CACHE_KEY}-}${{ runner.os }}-${{ runner.arch }}-${ImageOS:-selfhosted}-"
         echo "prefix=${prefix}" >> $GITHUB_OUTPUT
         echo "key=${prefix}${GITHUB_RUN_ID}-${{ job.check_run_id }}" >> $GITHUB_OUTPUT
 

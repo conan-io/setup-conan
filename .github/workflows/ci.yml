@@ -80,6 +80,45 @@ jobs:
           # asio is only in the local cache of this fresh runner if it was restored by prefix
           conan cache path asio/1.32.0
 
+  cache-key-save:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute checkout
+        uses: actions/checkout@v7
+
+      - name: Consume Conan Action
+        uses: ./
+        with:
+          cache_packages: 'true'
+          cache_key: conan-ci-custom-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Install package to be cached
+        shell: bash
+        run: |
+          conan install -r conancenter --requires=nlohmann_json/3.11.3 --build=missing
+
+  cache-key-restore:
+    needs: cache-key-save
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute checkout
+        uses: actions/checkout@v7
+
+      - name: Consume Conan Action
+        uses: ./
+        with:
+          cache_packages: 'true'
+          cache_key: conan-ci-custom-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Verify cache was restored from the custom key
+        shell: bash
+        run: |
+          conan cache path nlohmann_json/3.11.3
+          if conan cache path asio/1.32.0; then
+            echo "asio should not be restored when using a custom cache_key because it was not saved under that key"
+            exit 1
+          fi
+
   docker-test:
     runs-on: ubuntu-latest
     container:
