@@ -23,6 +23,14 @@ inputs:
     description: 'Cache all Conan packages from the cache'
     required: false
     default: 'false'
+  cache_read:
+    description: 'Restore Conan packages from the GitHub cache'
+    required: false
+    default: 'true'
+  cache_write:
+    description: 'Save Conan packages to the GitHub cache'
+    required: false
+    default: 'true'
   cache_key:
     description: 'Custom segment for the Conan packages cache key. Requires cache_packages. It is added as an extra segment to the key computed from the runner OS, architecture and image, so each value gets its own cache'
     required: false
@@ -141,15 +149,32 @@ runs:
         echo "prefix=${prefix}" >> $GITHUB_OUTPUT
         echo "key=${prefix}${GITHUB_RUN_ID}-${{ job.check_run_id }}" >> $GITHUB_OUTPUT
 
-    - name: Cache Conan packages
-      if: ${{ inputs.cache_packages == 'true' }}
-      uses: actions/cache@v6.1.0
+    - name: Restore and save Conan packages
+      if: ${{ inputs.cache_packages == 'true' && inputs.cache_read == 'true' && inputs.cache_write == 'true' }}
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       id: cache-conan-packages
       with:
         path: ${{ steps.get-conan-home.outputs.conan-home }}/p
         key: ${{ steps.conan-cache-key.outputs.key }}
         restore-keys: |
           ${{ steps.conan-cache-key.outputs.prefix }}
+
+    - name: Restore Conan packages
+      if: ${{ inputs.cache_packages == 'true' && inputs.cache_read == 'true' && inputs.cache_write != 'true' }}
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.get-conan-home.outputs.conan-home }}/p
+        key: ${{ steps.conan-cache-key.outputs.key }}
+        restore-keys: |
+          ${{ steps.conan-cache-key.outputs.prefix }}
+
+    - name: Save Conan packages
+      if: ${{ inputs.cache_packages == 'true' && inputs.cache_read != 'true' && inputs.cache_write == 'true' }}
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.get-conan-home.outputs.conan-home }}/p
+        key: ${{ steps.conan-cache-key.outputs.key }}
+        lookup-only: true
 
 branding:
   icon: 'package'
