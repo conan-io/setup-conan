@@ -67,6 +67,8 @@ It's possible to customize the action using the following options:
 | `audit_token`    | string  | The Conan audit token to authenticate to the Audit server with Conan.                                       |
 | `config_urls`    | list    | URLs of the Git repositories containing the custom Conan configurations to be installed.                    |
 | `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. See [Caching Conan packages](#caching-conan-packages). false by default |
+| `cache_read`     | boolean | Restore Conan packages from the GitHub cache. true by default.                                                |
+| `cache_write`    | boolean | Save Conan packages to the GitHub cache. true by default.                                                     |
 | `cache_key`      | string  | Extra segment added to the computed cache key, so each value gets its own cache. See [Caching Conan packages](#caching-conan-packages). |
 | `use_venv`       | boolean | Use a virtual environment for the Python version set in the GitHub runner.                                  |
 | `profile_detect` | boolean | Automatically detect and use a Conan profile based on the GitHub runner environment. true by default                        |
@@ -88,6 +90,8 @@ When `cache_packages: true` is set, the Conan packages folder (`<conan-home>/p`)
 ```
 
 Each job saves its own cache entry and restores the most recent one saved on the same kind of runner (OS, architecture and runner image). Conan then builds or downloads anything missing, and the updated cache is saved when the job finishes.
+
+Set `cache_read` and `cache_write` independently to control cache access. Both default to `true`, preserving the existing behavior. With `cache_packages: true`, use `cache_read: false` and `cache_write: true` for cache producers, or `cache_read: true` and `cache_write: false` for consumers. Set both to `false` to disable cache access.
 
 
 ### Custom cache key
