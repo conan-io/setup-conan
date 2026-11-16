@@ -143,7 +143,9 @@ runs:
 
     - name: Cache Conan packages
       if: ${{ inputs.cache_packages == 'true' }}
-      uses: actions/cache@v6.1.0
+      # INFO: cache v6.1.0 commit - Keep this commit hash for security verification
+      # See https://docs.github.com/en/actions/reference/security/secure-use#using-third-party-actions
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
       id: cache-conan-packages
       with:
         path: ${{ steps.get-conan-home.outputs.conan-home }}/p
