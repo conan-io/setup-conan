@@ -68,7 +68,7 @@ It's possible to customize the action using the following options:
 | `config_urls`    | list    | URLs of the Git repositories containing the custom Conan configurations to be installed.                    |
 | `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. See [Caching Conan packages](#caching-conan-packages). false by default |
 | `cache_key`      | string  | Extra segment added to the computed cache key, so each value gets its own cache. See [Caching Conan packages](#caching-conan-packages). |
-| `use_venv`       | boolean | Use a virtual environment for the Python version set in the GitHub runner.                                  |
+| `use_venv`       | boolean | Install Conan in a virtual environment, created with the `python` input (by default the Python on the runner's `PATH`), and put it on `PATH`. |
 | `python`         | string  | Python interpreter, a command on PATH or a path, to create the virtual environment with (`use_venv`) or else to install Conan with. `python` by default. See [Using setup-python Action alongside setup-conan](#using-setup-python-action-alongside-setup-conan). |
 | `upgrade_pip`    | boolean | Upgrade pip to the latest version before installing Conan. true by default.                                 |
 | `profile_detect` | boolean | Automatically detect and use a Conan profile based on the GitHub runner environment. true by default                        |

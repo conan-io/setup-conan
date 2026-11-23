@@ -159,11 +159,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
-      # A Python that is not on PATH: the action has to use it through the python input.
+      # A Python that is not on PATH: the action has to use it through the python input. 3.10
+      # bundles pip 23.0.1, long behind the latest pip, so an upgrade would show.
       - uses: actions/setup-python@v7
         id: python
         with:
-          python-version: '3.13'
+          python-version: '3.10'
           update-environment: false
       - name: Consume Conan Action with a given Python and without upgrading pip
         uses: ./
@@ -180,7 +181,7 @@ jobs:
         run: |
           conan --version | grep -q '2.29.1'
           command -v conan | grep conan-venv
-          python -c 'import sys; assert sys.version_info[:2] == (3, 13), sys.version'
+          python -c 'import sys; assert sys.version_info[:2] == (3, 10), sys.version'
           bundled="$("$SETUP_PYTHON" -c 'import ensurepip; print(ensurepip.version())')"
           installed="$(python -m pip --version | cut -d' ' -f2)"
           echo "bundled pip: $bundled, venv pip: $installed"

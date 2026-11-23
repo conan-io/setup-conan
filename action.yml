@@ -102,16 +102,26 @@ runs:
       id: install-conan
       env:
         PYTHON: ${{ inputs.python }}
+        USE_VENV: ${{ inputs.use_venv }}
         UPGRADE_PIP: ${{ inputs.upgrade_pip }}
+        CONAN_VERSION: ${{ inputs.version }}
       run: |
-        PYTHON_CMD="${VENV_PYTHON:-${PYTHON:-python}}"
+        if [ "$USE_VENV" = 'true' ]; then
+          PYTHON_CMD="$VENV_PYTHON"
+        else
+          PYTHON_CMD="${PYTHON:-python}"
+        fi
         if [ "$UPGRADE_PIP" = 'true' ]; then
           "$PYTHON_CMD" -m pip install --upgrade pip
         fi
-        if [ -n "${{ inputs.version }}" ]; then
-          "$PYTHON_CMD" -m pip install conan==${{ inputs.version }}
+        if [ -n "$CONAN_VERSION" ]; then
+          "$PYTHON_CMD" -m pip install "conan==$CONAN_VERSION"
         else
           "$PYTHON_CMD" -m pip install conan
+        fi
+        if ! command -v conan > /dev/null; then
+          echo "ERROR: Conan was installed with $PYTHON_CMD, but conan is not on PATH. Use use_venv, or a Python whose scripts folder is on PATH"
+          exit 1
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
