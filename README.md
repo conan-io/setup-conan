@@ -69,6 +69,8 @@ It's possible to customize the action using the following options:
 | `cache_packages` | boolean | Cache all stored Conan packages, under Conan cache, using Github cache support. See [Caching Conan packages](#caching-conan-packages). false by default |
 | `cache_key`      | string  | Extra segment added to the computed cache key, so each value gets its own cache. See [Caching Conan packages](#caching-conan-packages). |
 | `use_venv`       | boolean | Use a virtual environment for the Python version set in the GitHub runner.                                  |
+| `python`         | string  | Python interpreter, a command on PATH or a path, to create the virtual environment with (`use_venv`) or else to install Conan with. `python` by default. See [Using setup-python Action alongside setup-conan](#using-setup-python-action-alongside-setup-conan). |
+| `upgrade_pip`    | boolean | Upgrade pip to the latest version before installing Conan. true by default.                                 |
 | `profile_detect` | boolean | Automatically detect and use a Conan profile based on the GitHub runner environment. true by default                        |
 | `python_version` | string  | **DEPRECATED** Use the Python version set in the GitHub runner instead or a GitHub Action to set up Python. |
 
@@ -134,6 +136,23 @@ However, keep in mind [PKG_CONFIG_PATH](https://github.com/actions/setup-python/
 
   - name: Install Conan dependencies
     run: conan install . --build=missing
+```
+
+To keep the environment of setup-python out of the build altogether, set its `update-environment` to false and pass its Python to the `python` input, with `use_venv`. Then only the virtual environment, with Conan in it, goes on `PATH`:
+
+```yaml
+  - name: Install Python
+    id: python
+    uses: actions/setup-python@v7
+    with:
+      python-version: '3.13'
+      update-environment: false
+
+  - name: Install Conan
+    uses: conan-io/setup-conan@v1
+    with:
+      python: ${{ steps.python.outputs.python-path }}
+      use_venv: true
 ```
 
 For further details on how to manage enviroment variables of setup-python action, please refer to the [setup-python documentation](https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#using-update-environment-flag).

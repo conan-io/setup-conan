@@ -32,6 +32,14 @@ inputs:
     required: false
     default: '3.10'
     deprecationMessage: 'This input is deprecated and will be removed in future versions. Use the Python version set in the GitHub runner instead or a GitHub Action to set up Python.'
+  python:
+    description: 'Python interpreter, a command on PATH or a path, to create the virtual environment with (use_venv) or else to install Conan with. Without use_venv, Conan has to end up on PATH, e.g. with the Python set up by actions/setup-python'
+    required: false
+    default: 'python'
+  upgrade_pip:
+    description: 'Upgrade pip to the latest version before installing Conan'
+    required: false
+    default: 'true'
   use_venv:
     description: 'Install Conan inside an isolated virtual environment'
     required: false
@@ -74,9 +82,11 @@ runs:
     - name: Create virtual environment
       if: ${{ inputs.use_venv == 'true' }}
       shell: bash
+      env:
+        PYTHON: ${{ inputs.python }}
       run: |
         VENV_DIR="${RUNNER_TEMP}/conan-venv"
-        python -m venv "$VENV_DIR"
+        "${PYTHON:-python}" -m venv "$VENV_DIR"
         if [[ "${{ runner.os }}" == "Windows" ]]; then
           BIN_DIR="$VENV_DIR/Scripts"
         else
@@ -90,13 +100,18 @@ runs:
     - name: 'Install Conan'
       shell: bash
       id: install-conan
+      env:
+        PYTHON: ${{ inputs.python }}
+        UPGRADE_PIP: ${{ inputs.upgrade_pip }}
       run: |
-        PYTHON_CMD=${VENV_PYTHON:-python}
-        $PYTHON_CMD -m pip install --upgrade pip
+        PYTHON_CMD="${VENV_PYTHON:-${PYTHON:-python}}"
+        if [ "$UPGRADE_PIP" = 'true' ]; then
+          "$PYTHON_CMD" -m pip install --upgrade pip
+        fi
         if [ -n "${{ inputs.version }}" ]; then
-          $PYTHON_CMD -m pip install conan==${{ inputs.version }}
+          "$PYTHON_CMD" -m pip install conan==${{ inputs.version }}
         else
-          $PYTHON_CMD -m pip install conan
+          "$PYTHON_CMD" -m pip install conan
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 

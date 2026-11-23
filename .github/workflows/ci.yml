@@ -147,3 +147,41 @@ jobs:
       - name: Check for non existing default profile in Conan cache
         shell: bash
         run: if [ -e "$(conan config home)/profiles/default" ]; then echo "Default profile should not exist"; exit 1; fi
+
+  python-input-test:
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      # A Python that is not on PATH: the action has to use it through the python input.
+      - uses: actions/setup-python@v7
+        id: python
+        with:
+          python-version: '3.13'
+          update-environment: false
+      - name: Consume Conan Action with a given Python and without upgrading pip
+        uses: ./
+        with:
+          version: '2.29.1'
+          python: ${{ steps.python.outputs.python-path }}
+          use_venv: 'true'
+          upgrade_pip: 'false'
+          profile_detect: 'false'
+      - name: Check that Conan is in a venv of the given Python, with its bundled pip
+        shell: bash
+        env:
+          SETUP_PYTHON: ${{ steps.python.outputs.python-path }}
+        run: |
+          conan --version | grep -q '2.29.1'
+          command -v conan | grep conan-venv
+          python -c 'import sys; assert sys.version_info[:2] == (3, 13), sys.version'
+          bundled="$("$SETUP_PYTHON" -c 'import ensurepip; print(ensurepip.version())')"
+          installed="$(python -m pip --version | cut -d' ' -f2)"
+          echo "bundled pip: $bundled, venv pip: $installed"
+          [ "$bundled" = "$installed" ]
