@@ -63,9 +63,11 @@ runs:
     - name: Check Conan version
       shell: bash
       id: check-conan-version
+      env:
+        CONAN_VERSION: ${{ inputs.version }}
       run: |
-        if [ -n "${{ inputs.version }}" ]; then
-          conan_version="${{ inputs.version }}"
+        if [ -n "$CONAN_VERSION" ]; then
+          conan_version="$CONAN_VERSION"
           if [[ "$conan_version" == 1.* ]]; then
             echo "ERROR: Conan 1.x is not supported. Please use Conan 2.x"
             exit 1
@@ -81,6 +83,7 @@ runs:
 
     - name: Create virtual environment
       if: ${{ inputs.use_venv == 'true' }}
+      id: create-venv
       shell: bash
       env:
         PYTHON: ${{ inputs.python }}
@@ -96,21 +99,19 @@ runs:
         echo "VENV_PIP=$BIN_DIR/pip" >> "$GITHUB_ENV"
         echo "VENV_CONAN=$BIN_DIR/conan" >> "$GITHUB_ENV"
         echo "VENV_PYTHON=$BIN_DIR/python" >> "$GITHUB_ENV"
+        echo "python=$BIN_DIR/python" >> "$GITHUB_OUTPUT"
 
     - name: 'Install Conan'
       shell: bash
       id: install-conan
       env:
         PYTHON: ${{ inputs.python }}
-        USE_VENV: ${{ inputs.use_venv }}
+        # Set only if the venv step above ran in this call.
+        VENV_STEP_PYTHON: ${{ steps.create-venv.outputs.python }}
         UPGRADE_PIP: ${{ inputs.upgrade_pip }}
         CONAN_VERSION: ${{ inputs.version }}
       run: |
-        if [ "$USE_VENV" = 'true' ]; then
-          PYTHON_CMD="$VENV_PYTHON"
-        else
-          PYTHON_CMD="${PYTHON:-python}"
-        fi
+        PYTHON_CMD="${VENV_STEP_PYTHON:-${PYTHON:-python}}"
         if [ "$UPGRADE_PIP" = 'true' ]; then
           "$PYTHON_CMD" -m pip install --upgrade pip
         fi
@@ -119,8 +120,11 @@ runs:
         else
           "$PYTHON_CMD" -m pip install conan
         fi
-        if ! command -v conan > /dev/null; then
-          echo "ERROR: Conan was installed with $PYTHON_CMD, but conan is not on PATH. Use use_venv, or a Python whose scripts folder is on PATH"
+        # The conan on PATH has to be the one just installed, not missing or another install.
+        installed="$("$PYTHON_CMD" -m conans.conan --version)"
+        on_path="$(conan --version 2> /dev/null || true)"
+        if [ "$on_path" != "$installed" ]; then
+          echo "::error::Conan was installed with $PYTHON_CMD ($installed), but conan on PATH is '$(command -v conan || echo none)' (${on_path:-not found}). Use use_venv, or a Python whose scripts folder comes first on PATH"
           exit 1
         fi
         echo "conan-version=$(conan --version | cut -d' ' -f3)" >> $GITHUB_OUTPUT
